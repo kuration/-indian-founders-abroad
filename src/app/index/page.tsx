@@ -1,6 +1,8 @@
 import { supabase } from "@/lib/supabase";
-import LandingPage from "./_components/landing-page";
-import type { Founder } from "./_components/founder-index";
+import FounderIndex, {
+  type Founder,
+  type Stats,
+} from "../_components/founder-index";
 
 const FOUNDER_FIELDS =
   "id, full_name, first_name, last_name, title, company, profile_picture, current_country, company_industry, company_size, role_type, highest_education";
@@ -33,7 +35,7 @@ async function fetchAllFounders(): Promise<{
   return { data: all, error: null };
 }
 
-export default async function Home() {
+export default async function IndexPage() {
   const { data: founders, error } = await fetchAllFounders();
 
   if (error) {
@@ -46,5 +48,33 @@ export default async function Home() {
     );
   }
 
-  return <LandingPage founders={founders} />;
+  const total = founders.length;
+
+  const countryFreq = new Map<string, number>();
+  for (const f of founders) {
+    if (f.current_country) {
+      countryFreq.set(
+        f.current_country,
+        (countryFreq.get(f.current_country) ?? 0) + 1
+      );
+    }
+  }
+
+  let topCountry: string | null = null;
+  let topCount = 0;
+  for (const [name, count] of countryFreq) {
+    if (count > topCount) {
+      topCount = count;
+      topCountry = name;
+    }
+  }
+
+  const stats: Stats = {
+    total,
+    topCountry,
+    topPercent: total > 0 ? Math.round((topCount / total) * 100) : 0,
+    totalCountries: countryFreq.size,
+  };
+
+  return <FounderIndex founders={founders} stats={stats} />;
 }
