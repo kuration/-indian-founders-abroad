@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Founder } from "./founder-index";
+import { getCountryFlag } from "@/lib/country-flag";
 
 const TOP_SECTOR_COUNT = 6;
 const TOP_DESTINATIONS_COUNT = 8;
@@ -225,6 +226,14 @@ export default function LandingPage({ founders }: { founders: Founder[] }) {
                         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-bone-3 tabular-nums shrink-0">
                           {(i + 1).toString().padStart(2, "0")}
                         </span>
+                        {getCountryFlag(country) && (
+                          <span
+                            className="text-base shrink-0"
+                            aria-hidden="true"
+                          >
+                            {getCountryFlag(country)}
+                          </span>
+                        )}
                         <span className="font-sans text-[15px] lg:text-[16px] text-bone truncate">
                           {country}
                         </span>

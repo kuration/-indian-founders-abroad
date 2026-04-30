@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { getCountryFlag } from "@/lib/country-flag";
 
 export type Founder = {
   id: string | number;
@@ -148,6 +149,7 @@ export default function FounderIndex({
       setSelected: React.Dispatch<React.SetStateAction<Set<string>>>;
       options: string[];
       getValue: (f: Founder) => string | null;
+      formatLabel?: (v: string) => string;
     }
   > = {
     country: {
@@ -156,6 +158,10 @@ export default function FounderIndex({
       setSelected: setCountry,
       options: allCountries,
       getValue: (f) => f.current_country,
+      formatLabel: (v) => {
+        const flag = getCountryFlag(v);
+        return flag ? `${flag} ${v}` : v;
+      },
     },
     industry: {
       label: "Sector",
@@ -170,6 +176,8 @@ export default function FounderIndex({
       setSelected: setRoleType,
       options: allRoleTypes,
       getValue: (f) => f.role_type,
+      formatLabel: (v) =>
+        v.trim().toLowerCase() === "unknown" ? "Undetermined" : v,
     },
     education: {
       label: "Education",
@@ -361,6 +369,7 @@ export default function FounderIndex({
                   selected={d.selected}
                   onToggle={(v) => toggleChip(key, v)}
                   onClear={() => clearSection(key)}
+                  formatLabel={d.formatLabel}
                 />
               );
             })}
@@ -398,27 +407,6 @@ export default function FounderIndex({
               diaspora has built.
             </p>
 
-            {/* Stat row */}
-            <dl className="mt-12 grid grid-cols-1 md:grid-cols-3 border-y border-rule md:divide-x md:divide-rule">
-              <Stat
-                label="Founders"
-                value={stats.total.toLocaleString("en-US")}
-              />
-              <Stat
-                label="Top destination"
-                value={stats.topCountry ?? "—"}
-                sub={
-                  stats.topCountry
-                    ? `${stats.topPercent}% of cohort`
-                    : undefined
-                }
-              />
-              <Stat
-                label="Countries"
-                value={stats.totalCountries.toLocaleString("en-US")}
-                sub="5 continents"
-              />
-            </dl>
           </section>
 
           {/* Index */}
@@ -520,6 +508,7 @@ function FilterSection({
   selected,
   onToggle,
   onClear,
+  formatLabel,
 }: {
   label: string;
   options: string[];
@@ -527,6 +516,7 @@ function FilterSection({
   selected: Set<string>;
   onToggle: (value: string) => void;
   onClear: () => void;
+  formatLabel?: (v: string) => string;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [query, setQuery] = useState("");
@@ -601,7 +591,7 @@ function FilterSection({
             {collapsedDisplay.map((opt) => (
               <Chip
                 key={opt}
-                label={opt}
+                label={formatLabel ? formatLabel(opt) : opt}
                 count={counts.get(opt) ?? 0}
                 active={selected.has(opt)}
                 onClick={() => onToggle(opt)}
@@ -646,7 +636,7 @@ function FilterSection({
                   {queryFiltered.map((opt) => (
                     <Chip
                       key={opt}
-                      label={opt}
+                      label={formatLabel ? formatLabel(opt) : opt}
                       count={counts.get(opt) ?? 0}
                       active={selected.has(opt)}
                       onClick={() => onToggle(opt)}
@@ -699,33 +689,6 @@ function Chip({
   );
 }
 
-function Stat({
-  label,
-  value,
-  sub,
-}: {
-  label: string;
-  value: string;
-  sub?: string;
-}) {
-  return (
-    <div className="px-6 lg:px-8 py-8">
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-bone-3">
-        {label}
-      </p>
-      <p
-        className="mt-3 font-serif text-gold leading-none"
-        style={{ fontSize: "clamp(42px, 4vw, 48px)" }}
-      >
-        {value}
-      </p>
-      {sub && (
-        <p className="mt-2 font-sans text-sm text-bone-2">{sub}</p>
-      )}
-    </div>
-  );
-}
-
 function FounderCard({
   founder,
   index,
@@ -736,7 +699,7 @@ function FounderCard({
   const id = pad4(index);
   const hasRoleLine = !!(founder.title || founder.company);
   return (
-    <article className="group flex flex-col gap-5 bg-bg p-6 lg:p-8 border-r border-b border-rule transition-colors hover:bg-bg-2">
+    <article className="flex flex-col gap-5 bg-bg p-6 lg:p-8 border-r border-b border-rule">
       <div className="flex items-start justify-between">
         <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-gold">
           № {id}
@@ -760,7 +723,14 @@ function FounderCard({
       <hr className="border-t border-rule m-0" />
 
       <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2.5">
-        <Meta label="Country" value={founder.current_country} />
+        <Meta
+          label="Country"
+          value={
+            founder.current_country
+              ? `${getCountryFlag(founder.current_country)} ${founder.current_country}`.trim()
+              : null
+          }
+        />
       </dl>
 
       <hr className="border-t border-rule m-0" />
@@ -768,7 +738,7 @@ function FounderCard({
       <div className="flex justify-end">
         <Link
           href={`/founders/${founder.id}`}
-          className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-gold hover:text-gold-2 transition-colors"
+          className="group inline-flex items-center gap-2 border border-gold/60 bg-gold/5 px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-gold hover:border-gold hover:bg-gold/15 transition-colors"
         >
           View profile
           <span className="transition-transform duration-150 group-hover:translate-x-1">

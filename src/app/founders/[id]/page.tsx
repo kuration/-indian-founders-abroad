@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { getCountryFlag } from "@/lib/country-flag";
 
 export const dynamic = "force-dynamic";
 
@@ -83,6 +84,7 @@ export default async function FounderDetailPage({
   const f = data as FounderRecord;
 
   const linkedinUrl = pickFirstString(f, [
+    "linkedin_profile_url",
     "linkedin_url",
     "linkedin",
     "linkedIn",
@@ -140,8 +142,13 @@ export default async function FounderDetailPage({
               </p>
             )}
             {!isMissing(f.current_country) && (
-              <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-bone-3">
-                {f.current_country}
+              <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-bone-3 inline-flex items-center gap-2">
+                {getCountryFlag(f.current_country) && (
+                  <span className="text-base normal-case tracking-normal not-italic">
+                    {getCountryFlag(f.current_country)}
+                  </span>
+                )}
+                <span>{f.current_country}</span>
               </p>
             )}
             {linkedinUrl && !isMissing(linkedinUrl) && (
@@ -168,7 +175,14 @@ export default async function FounderDetailPage({
           <Meta label="Industry" value={f.company_industry} />
           <Meta label="Highest education" value={f.highest_education} />
           <Meta label="Company size" value={f.company_size} />
-          <Meta label="Role type" value={f.role_type} />
+          <Meta
+            label="Role type"
+            value={
+              f.role_type && f.role_type.trim().toLowerCase() === "unknown"
+                ? "Undetermined"
+                : f.role_type
+            }
+          />
         </dl>
       </section>
 
