@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* Polyfill country-flag emoji rendering on Windows (which has no native flag glyphs).
+   Constrained via unicode-range so the font is only fetched when a flag is actually rendered. */
+@font-face {
+  font-family: "Twemoji Country Flags";
+  unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+E0062-E0063, U+E0065, U+E0067,
+    U+E006C, U+E006E, U+E0073-E0074, U+E0077, U+E007F;
+  src: url("https://cdn.jsdelivr.net/npm/country-flag-emoji-polyfill@0.1.8/dist/TwemojiCountryFlags.woff2")
+    format("woff2");
+  font-display: swap;
+}
+
 @theme {
   --color-bg: #0f172a;
   --color-bg-2: #162035;
@@ -14,10 +25,12 @@
   --color-gold-2: #f2b73a;
   --color-gold-deep: #a87208;
 
-  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
-  --font-sans: var(--font-newsreader), ui-serif, Georgia, serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo,
-    monospace;
+  --font-serif: "Twemoji Country Flags", var(--font-instrument-serif),
+    ui-serif, Georgia, serif;
+  --font-sans: "Twemoji Country Flags", var(--font-newsreader), ui-serif,
+    Georgia, serif;
+  --font-mono: "Twemoji Country Flags", var(--font-jetbrains-mono),
+    ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 body {

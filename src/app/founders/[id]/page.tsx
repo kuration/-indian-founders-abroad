@@ -156,7 +156,7 @@ export default async function FounderDetailPage({
                 href={linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-6 border border-gold px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-gold hover:bg-gold hover:text-bg transition-colors"
+                className="inline-flex items-center gap-2 mt-10 border border-gold px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-gold hover:bg-gold hover:text-bg transition-colors"
               >
                 <span>LinkedIn</span>
                 <span aria-hidden="true">↗</span>
@@ -245,13 +245,13 @@ function Avatar({ founder }: { founder: FounderRecord }) {
       <img
         src={founder.profile_picture}
         alt={founder.full_name ?? "Founder"}
-        className="h-44 w-44 lg:h-56 lg:w-56 rounded-full object-cover border border-rule shrink-0"
+        className="h-32 w-32 lg:h-40 lg:w-40 rounded-full object-cover border border-rule shrink-0"
       />
     );
   }
   return (
-    <div className="h-44 w-44 lg:h-56 lg:w-56 rounded-full bg-bg-2 border border-rule flex items-center justify-center shrink-0">
-      <span className="font-serif text-bone-3 text-5xl leading-none">
+    <div className="h-32 w-32 lg:h-40 lg:w-40 rounded-full bg-bg-2 border border-rule flex items-center justify-center shrink-0">
+      <span className="font-serif text-bone-3 text-4xl leading-none">
         {getInitials(founder)}
       </span>
     </div>

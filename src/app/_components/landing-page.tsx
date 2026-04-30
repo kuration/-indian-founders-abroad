@@ -287,6 +287,56 @@ export default function LandingPage({ founders }: { founders: Founder[] }) {
         </div>
       </section>
 
+      {/* Talk to Sales */}
+      <section className="border-t border-rule">
+        <div className="mx-auto w-full max-w-7xl px-6 lg:px-12 py-14 lg:py-16 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+          <div className="max-w-xl">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-bone-3">
+              Sales & partnerships
+            </p>
+            <h3
+              className="mt-3 font-serif text-bone leading-[1.1] tracking-[-0.01em]"
+              style={{ fontSize: "clamp(24px, 2.4vw, 34px)" }}
+            >
+              Talk to our team about access, licensing, or custom queries.
+            </h3>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href="mailto:hello@diasporaindex.com"
+              className="inline-flex items-center gap-2 border border-gold bg-gold/10 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-gold hover:bg-gold hover:text-bg transition-colors"
+            >
+              <span>Talk to Sales</span>
+              <span aria-hidden="true">→</span>
+            </a>
+            <a
+              href="mailto:hello@diasporaindex.com"
+              aria-label="Email"
+              title="Email"
+              className="inline-flex h-11 w-11 items-center justify-center border border-rule text-bone-3 hover:border-gold hover:text-gold transition-colors"
+            >
+              <EmailIcon />
+            </a>
+            <a
+              href="#"
+              aria-label="LinkedIn"
+              title="LinkedIn"
+              className="inline-flex h-11 w-11 items-center justify-center border border-rule text-bone-3 hover:border-gold hover:text-gold transition-colors"
+            >
+              <LinkedInIcon />
+            </a>
+            <a
+              href="#"
+              aria-label="Book a call"
+              title="Book a call"
+              className="inline-flex h-11 w-11 items-center justify-center border border-rule text-bone-3 hover:border-gold hover:text-gold transition-colors"
+            >
+              <CalendarIcon />
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-rule mt-auto">
         <div className="mx-auto w-full max-w-7xl px-6 lg:px-12 py-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -383,5 +433,54 @@ function Stat({
         <p className="mt-2 font-sans text-sm text-bone-2">{sub}</p>
       )}
     </div>
+  );
+}
+
+function EmailIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      aria-hidden="true"
+    >
+      <rect x="3" y="6" width="18" height="13" rx="1" />
+      <path d="M3 7l9 6 9-6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function LinkedInIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8 17v-7H5.5v7H8zm-1.25-8.27a1.43 1.43 0 0 0 0-2.86 1.43 1.43 0 0 0 0 2.86zM18.5 17v-3.84c0-2.31-1.24-3.39-2.91-3.39a2.51 2.51 0 0 0-2.27 1.24V10h-2.49c.03.7 0 7 0 7h2.49v-3.91c0-.22.02-.45.08-.61.18-.45.59-.91 1.27-.91.9 0 1.26.69 1.26 1.7V17h2.57z" />
+    </svg>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      aria-hidden="true"
+    >
+      <rect x="3" y="5" width="18" height="16" rx="1" />
+      <path
+        d="M3 9h18M8 3v4M16 3v4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
