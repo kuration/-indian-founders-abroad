@@ -108,7 +108,7 @@ export default function LandingPage({ founders }: { founders: Founder[] }) {
         <div className="mx-auto max-w-7xl flex items-center justify-between gap-4 px-5 lg:px-10 py-4">
           <Wordmark />
           <Link
-            href="/index"
+            href="/the-index"
             className="hidden sm:inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-bone-3 hover:text-gold transition-colors"
           >
             <span>Browse the index</span>
@@ -269,7 +269,7 @@ export default function LandingPage({ founders }: { founders: Founder[] }) {
             verified.
           </p>
           <Link
-            href="/index"
+            href="/the-index"
             className="mt-10 inline-flex items-center gap-3 border border-gold bg-gold/10 px-8 py-4 font-mono text-[12px] uppercase tracking-[0.22em] text-gold hover:bg-gold hover:text-bg transition-colors"
           >
             <span>Browse the index</span>
