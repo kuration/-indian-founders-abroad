@@ -4,6 +4,8 @@ import FounderIndex, {
   type Stats,
 } from "../_components/founder-index";
 
+export const dynamic = "force-dynamic";
+
 const FOUNDER_FIELDS =
   "id, full_name, first_name, last_name, title, company, profile_picture, current_country, company_industry, company_size, role_type, highest_education";
 

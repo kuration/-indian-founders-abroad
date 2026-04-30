@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export type Founder = {
@@ -760,20 +761,20 @@ function FounderCard({
 
       <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2.5">
         <Meta label="Country" value={founder.current_country} />
-        <Meta label="Industry" value={founder.company_industry} />
-        <Meta label="Education" value={founder.highest_education} />
-        <Meta label="Size" value={founder.company_size} />
       </dl>
 
       <hr className="border-t border-rule m-0" />
 
       <div className="flex justify-end">
-        <span className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-gold">
+        <Link
+          href={`/founders/${founder.id}`}
+          className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-gold hover:text-gold-2 transition-colors"
+        >
           View profile
           <span className="transition-transform duration-150 group-hover:translate-x-1">
             →
           </span>
-        </span>
+        </Link>
       </div>
     </article>
   );
