@@ -118,6 +118,7 @@ def sync():
     page_size = 50
     total_synced = 0
     total_failed = 0
+    total_duplicate = 0
     total_skipped = 0
     total_not_fit = 0
     total_existing = 0
@@ -195,6 +196,9 @@ def sync():
             if sb_response.status_code in (200, 201):
                 total_synced += 1
                 print(f"  ✓ {supabase_row.get('full_name', 'Unknown')}")
+            elif sb_response.status_code == 409 or "23505" in sb_response.text:
+                # Duplicate person (same linkedin_url already in Supabase) — not an error.
+                total_duplicate += 1
             else:
                 total_failed += 1
                 print(f"  ✗ {supabase_row.get('full_name', 'Unknown')} — {sb_response.status_code}: {sb_response.text[:200]}")
@@ -206,7 +210,7 @@ def sync():
             print("Page limit reached. Stopping.")
             break
     
-    print(f"\nDone. {total_synced} new synced, {total_existing} already in Supabase, {total_incomplete} skipped (still enriching), {total_skipped} skipped (not verified), {total_not_fit} skipped (role not a fit), {total_failed} failed.")
+    print(f"\nDone. {total_synced} new synced, {total_existing} already in Supabase, {total_incomplete} skipped (still enriching), {total_skipped} skipped (not verified), {total_not_fit} skipped (role not a fit), {total_duplicate} skipped (duplicate person), {total_failed} failed.")
 
 if __name__ == "__main__":
     sync()
