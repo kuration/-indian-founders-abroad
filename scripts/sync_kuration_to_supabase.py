@@ -68,6 +68,7 @@ def sync():
     total_synced = 0
     total_failed = 0
     total_skipped = 0
+    total_not_fit = 0
     
     while True:
         url = f"https://api.kurationai.com/api/enterprise/projects/{KURATION_PROJECT_ID}/rows?page={page}&page_size={page_size}"
@@ -102,6 +103,14 @@ def sync():
                 continue
             supabase_row["verified"] = "Verified"
 
+            # Good-fit gate: hired CEOs pass verification (they ARE CEOs) but are not
+            # founders, so they don't belong in the founders index — skip them.
+            # (Anyone who isn't a CEO or Founder is already "Rejected" upstream in Kuration.)
+            role_type = str(supabase_row.get("role_type") or "")
+            if "hired" in role_type.lower():
+                total_not_fit += 1
+                continue
+
             supabase_url = f"{SUPABASE_URL}/rest/v1/founders"
             supabase_headers = {
                 "apikey": SUPABASE_KEY,
@@ -131,7 +140,7 @@ def sync():
             print("Page limit reached. Stopping.")
             break
     
-    print(f"\nDone. {total_synced} synced, {total_skipped} skipped (not verified), {total_failed} failed.")
+    print(f"\nDone. {total_synced} synced, {total_skipped} skipped (not verified), {total_not_fit} skipped (hired CEO / not a fit), {total_failed} failed.")
 
 if __name__ == "__main__":
     sync()
