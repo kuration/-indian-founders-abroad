@@ -69,6 +69,16 @@ def transform_kuration_row(kuration_row):
             supabase_row[supabase_col] = None
     return supabase_row
 
+def row_is_complete(kuration_row):
+    """True only when every column has finished processing.
+    Kuration marks an in-progress cell with is_loading=True, so if ANY
+    cell is still loading, the row isn't fully enriched yet."""
+    company = kuration_row.get("company", {}) or {}
+    for cell in company.values():
+        if isinstance(cell, dict) and cell.get("is_loading"):
+            return False
+    return True
+
 def fetch_existing_kuration_ids():
     """Return the set of kuration_row_id values already in Supabase, so we
     only send NEW rows and never resend ones we've already synced."""
@@ -111,6 +121,7 @@ def sync():
     total_skipped = 0
     total_not_fit = 0
     total_existing = 0
+    total_incomplete = 0
 
     print("Loading already-synced rows from Supabase (so we only send new ones)...")
     existing_ids = fetch_existing_kuration_ids()
@@ -143,6 +154,11 @@ def sync():
             # Incremental: never resend a row we've already synced.
             if supabase_row.get("kuration_row_id") in existing_ids:
                 total_existing += 1
+                continue
+
+            # Completeness: skip rows where ANY column is still enriching.
+            if not row_is_complete(kuration_row):
+                total_incomplete += 1
                 continue
 
             # Only sync leads that are verified/ready, and normalize the label.
@@ -190,7 +206,7 @@ def sync():
             print("Page limit reached. Stopping.")
             break
     
-    print(f"\nDone. {total_synced} new synced, {total_existing} already in Supabase, {total_skipped} skipped (not verified), {total_not_fit} skipped (role not a fit), {total_failed} failed.")
+    print(f"\nDone. {total_synced} new synced, {total_existing} already in Supabase, {total_incomplete} skipped (still enriching), {total_skipped} skipped (not verified), {total_not_fit} skipped (role not a fit), {total_failed} failed.")
 
 if __name__ == "__main__":
     sync()
