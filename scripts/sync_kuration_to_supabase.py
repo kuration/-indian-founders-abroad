@@ -67,6 +67,7 @@ def sync():
     page_size = 50
     total_synced = 0
     total_failed = 0
+    total_skipped = 0
     
     while True:
         url = f"https://api.kurationai.com/api/enterprise/projects/{KURATION_PROJECT_ID}/rows?page={page}&page_size={page_size}"
@@ -91,7 +92,16 @@ def sync():
         
         for kuration_row in rows:
             supabase_row = transform_kuration_row(kuration_row)
-            
+
+            # Only sync leads that are verified/ready, and normalize the label.
+            # Kuration's Verification tool usually outputs "Verified" but sometimes
+            # a whole paragraph that merely contains the word — treat both as ready.
+            verification = str(supabase_row.get("verified") or "")
+            if "verified" not in verification.lower():
+                total_skipped += 1
+                continue
+            supabase_row["verified"] = "Verified"
+
             supabase_url = f"{SUPABASE_URL}/rest/v1/founders"
             supabase_headers = {
                 "apikey": SUPABASE_KEY,
@@ -121,7 +131,7 @@ def sync():
             print("Page limit reached. Stopping.")
             break
     
-    print(f"\nDone. {total_synced} synced, {total_failed} failed.")
+    print(f"\nDone. {total_synced} synced, {total_skipped} skipped (not verified), {total_failed} failed.")
 
 if __name__ == "__main__":
     sync()

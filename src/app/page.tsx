@@ -20,6 +20,7 @@ async function fetchAllFounders(): Promise<{
     const { data, error } = await supabase
       .from("founders")
       .select(FOUNDER_FIELDS)
+      .ilike("verified", "%verified%")
       .order("full_name", { ascending: true })
       .order("id", { ascending: true })
       .range(from, from + PAGE_SIZE - 1);

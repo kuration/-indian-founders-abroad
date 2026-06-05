@@ -75,6 +75,7 @@ export default async function FounderDetailPage({
     .from("founders")
     .select("*")
     .eq("id", id)
+    .ilike("verified", "%verified%")
     .single();
 
   if (error || !data) {

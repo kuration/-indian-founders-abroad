@@ -1,0 +1,37 @@
+name: Sync Kuration → Supabase
+
+# Auto-refresh verified founders from Kuration into Supabase.
+# Runs on a schedule (no manual typing needed) and can also be
+# triggered by hand from the Actions tab ("Run workflow").
+
+on:
+  schedule:
+    # Every hour, on the hour (UTC). GitHub may delay this a few minutes.
+    - cron: "0 * * * *"
+  workflow_dispatch: {}
+
+# Prevent two syncs from overlapping if one runs long.
+concurrency:
+  group: kuration-supabase-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run sync
+        env:
+          KURATION_API_KEY: ${{ secrets.KURATION_API_KEY }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python scripts/sync_kuration_to_supabase.py
