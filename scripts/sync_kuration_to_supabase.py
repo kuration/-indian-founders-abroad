@@ -38,6 +38,17 @@ COLUMN_MAP = {
 
 NULL_VALUES = ["", "Error", "Not Found", "Skipped", "Not Available", None]
 
+# Only these role types belong in the founders index. Everything else
+# (Hired CEO, Unknown, blank, etc.) is skipped at sync time. Compared
+# case-insensitively. No data is changed or deleted in Kuration.
+ALLOWED_ROLE_TYPES = {
+    "founder",
+    "co-founder",
+    "co-founder & ceo",
+    "chairman & ceo",
+    "chief executive officer",
+}
+
 # ============ HELPERS ============
 
 def clean_value(value):
@@ -58,6 +69,36 @@ def transform_kuration_row(kuration_row):
             supabase_row[supabase_col] = None
     return supabase_row
 
+def fetch_existing_kuration_ids():
+    """Return the set of kuration_row_id values already in Supabase, so we
+    only send NEW rows and never resend ones we've already synced."""
+    ids = set()
+    headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+    }
+    start, step = 0, 1000
+    while True:
+        resp = requests.get(
+            f"{SUPABASE_URL}/rest/v1/founders",
+            headers={**headers, "Range": f"{start}-{start + step - 1}"},
+            params={"select": "kuration_row_id"},
+        )
+        if resp.status_code not in (200, 206):
+            print(f"Warning: could not load existing rows: {resp.status_code} {resp.text[:200]}")
+            break
+        batch = resp.json()
+        if not batch:
+            break
+        for row in batch:
+            kid = row.get("kuration_row_id")
+            if kid:
+                ids.add(kid)
+        if len(batch) < step:
+            break
+        start += step
+    return ids
+
 # ============ MAIN ============
 
 def sync():
@@ -69,6 +110,11 @@ def sync():
     total_failed = 0
     total_skipped = 0
     total_not_fit = 0
+    total_existing = 0
+
+    print("Loading already-synced rows from Supabase (so we only send new ones)...")
+    existing_ids = fetch_existing_kuration_ids()
+    print(f"  {len(existing_ids)} rows already in Supabase — they will be skipped.")
     
     while True:
         url = f"https://api.kurationai.com/api/enterprise/projects/{KURATION_PROJECT_ID}/rows?page={page}&page_size={page_size}"
@@ -94,6 +140,11 @@ def sync():
         for kuration_row in rows:
             supabase_row = transform_kuration_row(kuration_row)
 
+            # Incremental: never resend a row we've already synced.
+            if supabase_row.get("kuration_row_id") in existing_ids:
+                total_existing += 1
+                continue
+
             # Only sync leads that are verified/ready, and normalize the label.
             # Kuration's Verification tool usually outputs "Verified" but sometimes
             # a whole paragraph that merely contains the word — treat both as ready.
@@ -103,11 +154,10 @@ def sync():
                 continue
             supabase_row["verified"] = "Verified"
 
-            # Good-fit gate: hired CEOs pass verification (they ARE CEOs) but are not
-            # founders, so they don't belong in the founders index — skip them.
-            # (Anyone who isn't a CEO or Founder is already "Rejected" upstream in Kuration.)
-            role_type = str(supabase_row.get("role_type") or "")
-            if "hired" in role_type.lower():
+            # Good-fit gate: only allowed founder/CEO role types belong in the index.
+            # Everything else (Hired CEO, Unknown, blank, etc.) is skipped.
+            role_type = str(supabase_row.get("role_type") or "").strip().lower()
+            if role_type not in ALLOWED_ROLE_TYPES:
                 total_not_fit += 1
                 continue
 
@@ -140,7 +190,7 @@ def sync():
             print("Page limit reached. Stopping.")
             break
     
-    print(f"\nDone. {total_synced} synced, {total_skipped} skipped (not verified), {total_not_fit} skipped (hired CEO / not a fit), {total_failed} failed.")
+    print(f"\nDone. {total_synced} new synced, {total_existing} already in Supabase, {total_skipped} skipped (not verified), {total_not_fit} skipped (role not a fit), {total_failed} failed.")
 
 if __name__ == "__main__":
     sync()

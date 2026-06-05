@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase, ALLOWED_ROLE_TYPES } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCountryFlag } from "@/lib/country-flag";
@@ -76,6 +76,7 @@ export default async function FounderDetailPage({
     .select("*")
     .eq("id", id)
     .ilike("verified", "%verified%")
+    .in("role_type", ALLOWED_ROLE_TYPES)
     .single();
 
   if (error || !data) {

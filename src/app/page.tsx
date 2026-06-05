@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase, ALLOWED_ROLE_TYPES } from "@/lib/supabase";
 import LandingPage from "./_components/landing-page";
 import type { Founder } from "./_components/founder-index";
 
@@ -21,6 +21,7 @@ async function fetchAllFounders(): Promise<{
       .from("founders")
       .select(FOUNDER_FIELDS)
       .ilike("verified", "%verified%")
+      .in("role_type", ALLOWED_ROLE_TYPES)
       .order("full_name", { ascending: true })
       .order("id", { ascending: true })
       .range(from, from + PAGE_SIZE - 1);
