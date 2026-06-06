@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Founder } from "./founder-index";
+import Crest from "./crest";
 import { getCountryFlag } from "@/lib/country-flag";
 
 const TOP_SECTOR_COUNT = 6;
@@ -715,22 +716,6 @@ function Wordmark() {
         <span className="italic text-gold">Index</span>
       </span>
     </Link>
-  );
-}
-
-function Crest({ size = 26 }: { size?: number }) {
-  return (
-    <span
-      className="inline-flex items-center justify-center rounded-full border border-gold text-gold"
-      style={{ height: size, width: size }}
-    >
-      <span
-        className="font-serif italic leading-none"
-        style={{ fontSize: size * 0.55, transform: "translateY(-1px)" }}
-      >
-        i
-      </span>
-    </span>
   );
 }
 

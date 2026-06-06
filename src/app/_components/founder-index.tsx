@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import Crest from "./crest";
 import { getCountryFlag } from "@/lib/country-flag";
 
 export type Founder = {
@@ -468,22 +469,6 @@ export default function FounderIndex({
 }
 
 /* -------- Building blocks -------- */
-
-function Crest({ size = 28 }: { size?: number }) {
-  return (
-    <span
-      className="inline-flex items-center justify-center rounded-full border border-gold text-gold"
-      style={{ height: size, width: size }}
-    >
-      <span
-        className="font-serif italic leading-none"
-        style={{ fontSize: size * 0.55, transform: "translateY(-1px)" }}
-      >
-        i
-      </span>
-    </span>
-  );
-}
 
 function Wordmark({ size = "sm" }: { size?: "sm" | "lg" }) {
   const isLarge = size === "lg";

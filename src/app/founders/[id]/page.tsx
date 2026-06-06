@@ -1,6 +1,7 @@
 import { supabase, ALLOWED_ROLE_TYPES } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Crest from "@/app/_components/crest";
 import { getCountryFlag } from "@/lib/country-flag";
 
 export const dynamic = "force-dynamic";
@@ -296,18 +297,3 @@ function Wordmark() {
   );
 }
 
-function Crest({ size = 26 }: { size?: number }) {
-  return (
-    <span
-      className="inline-flex items-center justify-center rounded-full border border-gold text-gold"
-      style={{ height: size, width: size }}
-    >
-      <span
-        className="font-serif italic leading-none"
-        style={{ fontSize: size * 0.55, transform: "translateY(-1px)" }}
-      >
-        i
-      </span>
-    </span>
-  );
-}
