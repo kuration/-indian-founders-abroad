@@ -11,6 +11,15 @@
   font-display: swap;
 }
 
+@keyframes atlas-arc-draw {
+  from {
+    stroke-dashoffset: 380;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 @theme {
   --color-bg: #0f172a;
   --color-bg-2: #162035;

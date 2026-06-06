@@ -3,6 +3,7 @@ import {
   Instrument_Serif,
   Newsreader,
   JetBrains_Mono,
+  Archivo,
 } from "next/font/google";
 import "./globals.css";
 
@@ -28,6 +29,13 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const archivo = Archivo({
+  variable: "--font-archivo",
+  subsets: ["latin"],
+  weight: ["800", "900"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "The Indian Diaspora Index",
   description:
@@ -42,7 +50,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} ${archivo.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-bone">
         {children}

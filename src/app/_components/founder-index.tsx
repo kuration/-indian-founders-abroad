@@ -17,6 +17,8 @@ export type Founder = {
   company_size: string | null;
   role_type: string | null;
   highest_education: string | null;
+  company_logo: string | null;
+  created_at: string | null;
 };
 
 export type Stats = {
@@ -716,7 +718,22 @@ function FounderCard({
         <p className="font-sans text-[15px] leading-snug text-bone-2">
           {founder.title && <em className="italic">{founder.title}</em>}
           {founder.title && founder.company && <span> · </span>}
-          {founder.company && <span>{founder.company}</span>}
+          {founder.company && (
+            <span className="inline-flex items-center gap-1.5 align-middle">
+              {founder.company_logo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={founder.company_logo}
+                  alt=""
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
+                  className="inline-block h-7 w-7 rounded-md object-contain bg-white p-0.5 border border-rule"
+                />
+              )}
+              {founder.company}
+            </span>
+          )}
         </p>
       )}
 

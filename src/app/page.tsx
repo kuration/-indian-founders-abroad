@@ -5,7 +5,7 @@ import type { Founder } from "./_components/founder-index";
 export const dynamic = "force-dynamic";
 
 const FOUNDER_FIELDS =
-  "id, full_name, first_name, last_name, title, company, profile_picture, current_country, company_industry, company_size, role_type, highest_education";
+  "id, full_name, first_name, last_name, title, company, profile_picture, company_logo, current_country, company_industry, company_size, role_type, highest_education, created_at";
 
 const PAGE_SIZE = 1000;
 
@@ -22,7 +22,7 @@ async function fetchAllFounders(): Promise<{
       .select(FOUNDER_FIELDS)
       .ilike("verified", "%verified%")
       .in("role_type", ALLOWED_ROLE_TYPES)
-      .order("full_name", { ascending: true })
+      .order("created_at", { ascending: false, nullsFirst: false })
       .order("id", { ascending: true })
       .range(from, from + PAGE_SIZE - 1);
 
