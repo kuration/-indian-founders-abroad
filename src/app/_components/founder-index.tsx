@@ -488,7 +488,7 @@ function Crest({ size = 28 }: { size?: number }) {
 function Wordmark({ size = "sm" }: { size?: "sm" | "lg" }) {
   const isLarge = size === "lg";
   return (
-    <a href="/" className="inline-flex items-center gap-2.5 group">
+    <Link href="/" className="inline-flex items-center gap-2.5 group">
       <Crest size={isLarge ? 32 : 26} />
       <span
         className={`font-serif text-bone tracking-tight leading-none ${
@@ -497,7 +497,7 @@ function Wordmark({ size = "sm" }: { size?: "sm" | "lg" }) {
       >
         The Indian Diaspora <span className="italic text-gold">Index</span>
       </span>
-    </a>
+    </Link>
   );
 }
 
