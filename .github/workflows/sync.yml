@@ -5,9 +5,11 @@ name: Sync Kuration → Supabase
 # triggered by hand from the Actions tab ("Run workflow").
 
 on:
+  # We enrich about once a week, so the sync runs weekly (Mondays 06:00 UTC) as a
+  # backstop. Best practice: trigger it manually (Actions tab -> Run workflow)
+  # right after each weekly enrichment for an immediate sync.
   schedule:
-    # Every hour, on the hour (UTC). GitHub may delay this a few minutes.
-    - cron: "0 * * * *"
+    - cron: "0 6 * * 1"
   workflow_dispatch: {}
 
 # Prevent two syncs from overlapping if one runs long.
