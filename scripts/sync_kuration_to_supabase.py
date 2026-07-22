@@ -35,7 +35,9 @@ COLUMN_MAP = {
     "3cb79bd9-fd11-43d0-8de4-c78e36db5088": "highest_education",
     "93aef2aa-2b88-4442-bfaf-ac65aaac51ee": "company_size",
     "c65cb97e-c61c-4140-83b3-6dc8c126696e": "company_description",
-    "b8c81d61-4270-4870-98cb-a1c0a38d11f9": "company_logo",
+    # "Kuration Saved Image URL From Company Logo" — Kuration-saved copy (durable),
+    # replacing the expiring LinkedIn media URL.
+    "4f9e17a2-d218-4a30-91bb-9978c6298f4f": "company_logo",
 }
 
 NULL_VALUES = ["", "Error", "Not Found", "Skipped", "Not Available", None]
