@@ -24,7 +24,9 @@ COLUMN_MAP = {
     "fddd388d-22cf-40bc-a248-e74ffb288d59": "company_linkedin",
     "ef09ff1d-56c4-4dcc-a8db-4fe1278cd1a3": "linkedin_url",
     "325ef18f-1876-4bad-ab46-fdbd8288630a": "location",
-    "ce656b6f-1918-4ce3-9dd1-d8178e38993e": "profile_picture",
+    # "Kuration URL for LinkedIn Profile Picture" — Kuration-saved copy (no expiry
+    # token), replacing the expiring LinkedIn media URL.
+    "cc7d3bc6-40f0-4773-867f-0eb54c392d0a": "profile_picture",
     "72917ec8-ca58-4f62-b072-c97d0f4fc808": "linkedin_profile_url",
     "1dc88174-0ae8-4ed7-b158-3dc247aa398d": "verified",
     "5a9a4019-6b55-4c8c-8ef8-b0fde1a96dce": "current_country",
