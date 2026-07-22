@@ -36,6 +36,14 @@ async function fetchAllFounders(): Promise<{
     from += PAGE_SIZE;
   }
 
+  // Founders with a durable (Kuration-saved) photo first; ones whose image
+  // failed to save go to the very end. Stable sort keeps newest-first within
+  // each group. Self-correcting: once a photo is re-saved, they move back up.
+  all.sort(
+    (a, b) =>
+      (a.profile_picture?.includes("visionmodel") ? 0 : 1) -
+      (b.profile_picture?.includes("visionmodel") ? 0 : 1)
+  );
   return { data: all, error: null };
 }
 
